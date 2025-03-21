@@ -3,26 +3,15 @@ import { describe, it, expect } from 'vitest';
 import { generateResultText } from './output';
 
 describe('generateResultText()', () => {
-  it('should return a string, no matter which value is passed in', () => {
-    const val1 = 1;
-    const val2 = 'invalid';
-    const val3 = false;
-
-    const result1 = generateResultText(val1);
-    const result2 = generateResultText(val2);
-    const result3 = generateResultText(val3);
-
-    expect(result1).toBeTypeOf('string');
-    expect(result2).toBeTypeOf('string');
-    expect(result3).toBeTypeOf('string');
+  it.each([1, 'invalid', false])('should return a string for %p', (input) => {
+    const result = generateResultText(input);
+    expect(result).toBeTypeOf('string');
   });
 
   it('should return a string that contains the calculation result if a number is provided as a result', () => {
     const result = 5;
-
     const resultText = generateResultText(result);
-
-    expect(resultText).toContain(result.toString());
+    expect(resultText).toBe(`Result: ${result}`);
   });
 
   it('should return an empty string if "no-calc" is provided as a result', () => {
@@ -41,11 +30,13 @@ describe('generateResultText()', () => {
     expect(resultText).toContain('Invalid');
   });
 
-  it('should return a text in the correct format', () => {
-    const result = 5;
+  it('should return "Result: undefined" when result is undefined', () => {
+    const resultText = generateResultText(undefined);
+    expect(resultText).toBe('Result: undefined');
+  });
 
-    const resultText = generateResultText(result);
-
-    expect(resultText).toMatch(`Result: ${result}`);
-  })
+  it('should return "Result: null" when result is null', () => {
+    const resultText = generateResultText(null);
+    expect(resultText).toBe('Result: null');
+  });
 });
